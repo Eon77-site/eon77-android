@@ -1,0 +1,46 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk zip unzip
+        pip install python-for-android
+    
+    - name: Build APK
+      run: |
+        p4a apk \
+          --private . \
+          --package=io.aion.eon77 \
+          --name "EON77" \
+          --version 1.0 \
+          --bootstrap=sdl2 \
+          --requirements=python3,kivy \
+          --permission INTERNET \
+          --permission BLUETOOTH \
+          --permission ACCESS_FINE_LOCATION \
+          --arch=arm64-v8a \
+          --ndk-api=21 \
+          --android-api=31
+    
+    - name: Find and upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: eon77-apk
+        path: "*.apk"
