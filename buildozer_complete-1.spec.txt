@@ -1,0 +1,97 @@
+[app]
+title = EON-77 Aion
+package.name = eon77
+package.domain = io.aion
+source.dir = .
+source.include_exts = py
+version = 2.0.0
+requirements = python3==3.11,kivy==2.3.0,cryptography==41.0.7,pyjnius,android,plyer
+orientation = portrait
+fullscreen = 0
+
+[buildozer]
+log_level = 2
+warn_on_root = 0
+build_dir = ./.buildozer
+bin_dir = ./bin
+
+# ═══════════════════════════════════════════════════════════════════════
+# ANDROID PERMISSIONS — COMPLETE SET
+# ═══════════════════════════════════════════════════════════════════════
+
+[app:android.permissions]
+# Network & Internet
+INTERNET
+ACCESS_NETWORK_STATE
+ACCESS_WIFI_STATE
+CHANGE_WIFI_STATE
+
+# Bluetooth (Classic + BLE + Android 12+ requirements)
+BLUETOOTH
+BLUETOOTH_ADMIN
+BLUETOOTH_CONNECT
+BLUETOOTH_SCAN
+BLUETOOTH_ADVERTISE
+
+# Location (required for Bluetooth scanning)
+ACCESS_FINE_LOCATION
+ACCESS_COARSE_LOCATION
+
+# Background Services & Wake Lock
+FOREGROUND_SERVICE
+FOREGROUND_SERVICE_DATA_SYNC
+WAKE_LOCK
+VIBRATE
+
+# Notifications (Android 13+)
+POST_NOTIFICATIONS
+
+# Biometric Authentication
+USE_BIOMETRIC
+USE_FINGERPRINT
+
+# Storage
+READ_EXTERNAL_STORAGE
+WRITE_EXTERNAL_STORAGE
+
+[app:android]
+# Android 14 (latest stable)
+api = 34
+minapi = 26
+sdk = 34
+ndk = 26b
+
+# Both architectures for maximum compatibility
+archs = arm64-v8a,armeabi-v7a
+
+# Android features
+android.features = android.hardware.bluetooth,android.hardware.wifi,android.hardware.biometric
+
+# Gradle dependencies (updated)
+android.gradle_dependencies = androidx.core:core:1.12.0,androidx.appcompat:appcompat:1.6.1,androidx.biometric:biometric:1.2.0-alpha05
+
+# AndroidX support (required)
+android.enable_androidx = True
+
+# Auto-accept SDK licenses
+android.accept_sdk_license = True
+
+# Logcat filters
+android.logcat_filters = *:S python:D
+
+# Copy libs mode
+android.copy_libs = 1
+
+# Wake lock to keep service alive
+android.wakelock = True
+
+# ═══════════════════════════════════════════════════════════════════════
+# RELEASE BUILD CONFIGURATION (optional)
+# ═══════════════════════════════════════════════════════════════════════
+
+# Uncomment and configure for release builds:
+# android.release_artifact = apk
+# android.release_keystore = eon77.keystore
+# android.release_keystore_passwd = YOUR_PASSWORD
+# android.release_key_alias = eon77
+# android.release_key_alias_passwd = YOUR_PASSWORD
