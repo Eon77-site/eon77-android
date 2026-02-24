@@ -6,11 +6,9 @@ from kivy.uix.button import Button
 from kivy.clock import Clock
 import random
 
-# Tenta importar a criptografia. Se o build for "leve", ele avisa mas não trava.
 try:
     from cryptography.fernet import Fernet
     CRYPTO_AVAILABLE = True
-    # Gera chave de sessão para proteção quântica
     SESSION_KEY = Fernet.generate_key()
     cipher = Fernet(SESSION_KEY)
 except ImportError:
@@ -21,7 +19,6 @@ class AionInterface(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', padding=20, spacing=10, **kwargs)
         
-        # Cabeçalho de Autoridade
         self.add_widget(Label(
             text="AION NETWORK - NÓ 0", 
             font_size='24sp', 
@@ -29,7 +26,6 @@ class AionInterface(BoxLayout):
             bold=True
         ))
         
-        # Status da criptografia
         crypto_status = "🔒 PROTEÇÃO QUÂNTICA: ATIVA" if CRYPTO_AVAILABLE else "⚠️ PROTEÇÃO QUÂNTICA: INDISPONÍVEL"
         self.add_widget(Label(
             text=crypto_status,
@@ -40,11 +36,9 @@ class AionInterface(BoxLayout):
         self.status_label = Label(text="SISTEMA: AGUARDANDO COMANDO", font_size='14sp')
         self.add_widget(self.status_label)
 
-        # Painel de Mineração Simulado
         self.mining_label = Label(text="HASH RATE: 0.00 MH/s", font_size='18sp')
         self.add_widget(self.mining_label)
 
-        # Botões de Comando
         self.btn_mine = Button(text="INICIAR MINERAÇÃO", background_color=(0, 0.5, 1, 1))
         self.btn_mine.bind(on_press=self.toggle_mining)
         self.add_widget(self.btn_mine)
@@ -54,19 +48,17 @@ class AionInterface(BoxLayout):
         self.add_widget(self.btn_safety)
 
         self.is_mining = False
-        self._mining_event = None  # Referência ao evento do Clock
+        self._mining_event = None
 
     def toggle_mining(self, instance):
         self.is_mining = not self.is_mining
         if self.is_mining:
             instance.text = "PARAR MINERAÇÃO"
             self.status_label.text = "SISTEMA: OPERACIONAL - PROTEÇÃO QUÂNTICA ATIVA"
-            # Guarda referência para cancelar corretamente
             self._mining_event = Clock.schedule_interval(self.update_mining, 1.0)
         else:
             instance.text = "INICIAR MINERAÇÃO"
             self.status_label.text = "SISTEMA: STANDBY"
-            # Cancela pelo evento guardado (mais seguro)
             if self._mining_event:
                 self._mining_event.cancel()
                 self._mining_event = None
@@ -76,13 +68,11 @@ class AionInterface(BoxLayout):
         if self.is_mining:
             hash_rate = random.uniform(10.5, 95.8)
             self.mining_label.text = f"HASH RATE: {hash_rate:.2f} MH/s"
-            
-            # Usa criptografia se disponível (simula hash seguro)
             if cipher:
                 try:
                     token = cipher.encrypt(f"block_{hash_rate:.2f}".encode())
                 except Exception:
-                    pass  # Silencia erro de cripto sem travar o app
+                    pass
 
     def show_laws(self, instance):
         laws = (
@@ -94,13 +84,12 @@ class AionInterface(BoxLayout):
         self.status_label.text = laws
 
 class AIONApp(App):
-    title = "AION Network"  # Título correto no Android
+    title = "AION Network"
     
     def build(self):
         return AionInterface()
     
     def on_stop(self):
-        # Garante que o Clock é cancelado ao fechar o app
         root = self.root
         if root and root._mining_event:
             root._mining_event.cancel()
