@@ -60,15 +60,9 @@ jobs:
         run: |
           mkdir -p ~/.android
           echo "count=0" > ~/.android/repositories.cfg
-          yes | buildozer -v android debug 2>&1 | tee build.log
-          if [ ${PIPESTATUS[0]} -ne 0 ]; then
-            echo "=== ERRO - ÚLTIMAS 50 LINHAS ==="
-            tail -50 build.log
-            exit 1
-          fi
+          buildozer -v android debug
         env:
           ACCEPT_SDK_LICENSE: "y"
-          ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
 
       - name: Upload do APK
         uses: actions/upload-artifact@v4
